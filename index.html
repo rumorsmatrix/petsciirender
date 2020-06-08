@@ -90,6 +90,7 @@
 				canvas = document.getElementById('canvas');
 				
 				context = canvas.getContext("2d");
+				context.clearRect(0, 0, canvas.width, canvas.height);
 				context.drawImage(source,0,0,WIDTH,HEIGHT);
 				
 				srcdata = greyscale(context,WIDTH,HEIGHT);
