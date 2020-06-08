@@ -1,3 +1,7 @@
+# persciirender -> fork
+I've forked and modified https://github.com/gnacu/petsciirender slightly. It now allows a file to be uploaded instead of having to modify the source, and I made it ever-so-slightly prettier to look at. I've also doubled the default size from 320x200 to 640x400, which is not canonical PETSCII but produces more detailed images, which is what I wanted.
+
+
 # petsciirender
 A web-based PETSCII Art Renderer
 

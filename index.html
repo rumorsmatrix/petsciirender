@@ -6,15 +6,49 @@
 			C64 PETSCII Art Generator
 		</title>
 		<style type='text/css'>
+
+			body {
+				margin: 0 auto;
+				background: #50459b;
+				color: #887ecb;
+				font-family: monospace;
+				font-weight: bold;
+				font-size: 200%;
+			}
+
+			.stripe {
+				background: #887ecb;
+				width: 100%;
+				height: 128px;
+			}
+
+			#main {
+				margin: 32px auto;
+				text-align: center;
+			}
+
+			#charsetContainer, #source, #file_save {
+				display: none;
+			}
+
+			#file_picker {
+				cursor: pointer;
+				text-decoration: underline;
+				color: #887ecb;
+			}		
+
+			#canvas {
+				border: 8px solid #887ecb;
+			}
 		
 		</style>
 	</head>
-	<body onload='init();'>
+	<body onload=''>
 		<script type='text/javascript'>
 			var CHARSET    = "upperlower"
 			var CHARACTERS = 256;
-			var WIDTH 		 = 320;
-			var HEIGHT 		 = 200;
+			var WIDTH      = 640;
+			var HEIGHT     = 400;
 			var CWIDTH     = 8;
 			var CHEIGHT    = 8;
 			
@@ -60,7 +94,7 @@
 				
 				srcdata = greyscale(context,WIDTH,HEIGHT);
 				
-				character 				 = document.getElementById("character");
+				character = document.getElementById("character");
 				characterContainer = document.getElementById("charsetContainer");
 	
 				for(var i=0;i<CHARACTERS;i++) {
@@ -187,6 +221,9 @@
 			};			
 			
 			var render = function() {
+
+				console.log('render!');
+
 				var charsWide = WIDTH  / CWIDTH;
 				var charsHigh = HEIGHT / CHEIGHT;
 			
@@ -204,6 +241,8 @@
 						c++;
 					}
 				}
+				document.getElementById('file_picker').style.display = 'block';
+				setStatus("");
 			};
 			
 			var getSourceChar = function(c) {
@@ -266,18 +305,55 @@
 				
 				return difference;
 			};
+
+			const setStatus = function(text) {
+				document.getElementById('status_text').innerHTML = text;
+			}
+
+			const loadFile = function(event) {
+				setStatus("Loading image...");
+				document.getElementById('file_picker').style.display = 'none';
+
+				var selectedFile = event.target.files[0];
+				var reader = new FileReader();
+
+				var imgtag = document.getElementById("source");
+				imgtag.title = selectedFile.name;
+
+				reader.onload = function(event) {
+					imgtag.src = event.target.result;
+				};
+
+				imgtag.addEventListener('load', function() {
+					setStatus("Thinking...");
+					init();
+				});
+
+				reader.readAsDataURL(selectedFile);
+			};
+
 		</script>
 
-		<img src='src/s_classic.png' id='source' style='width:320px;height:200px;'>
-		<img src='' id='character' style='display:none;'>
-		<canvas width=320 height=200 style='width:320px;height:200px;' id='canvas'></canvas>
 
-		<br>
+		<div class="stripe"></div>
+		<div id="main">
 
-		<div id='charsetContainer'></div>
+			<img src='' id='source' style='width:640px;height:400px;'>
+			<img src='' id='character' style='display:none;'>
+			<canvas width=640 height=400 style='width:640px;height:400px;' id='canvas'></canvas>
 
-		<input type='text' value='petsciiart.pet' id='filename'>
-		<input type='button' value='save' id='savebut'>
 
+			<div id='charsetContainer'></div>
+
+			<p id="status_text"></p>
+			<p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+			<p><label for="file" id="file_picker">Upload Image</label></p>
+
+			<div id="file_save">
+				<input type='text' value='petsciiart.pet' id='filename'>
+				<input type='button' value='save' id='savebut'>
+			</div>
+
+		</div>
 	</body>
 </html>
